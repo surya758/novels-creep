@@ -1,21 +1,12 @@
 import prisma from '@/app/lib/db';
-import { redirect } from 'next/navigation';
-import { getAuthenticateUser } from '@/app/actions/user';
-import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
+import Layout from './components/common/Layout';
 
 export default async function Home() {
-  const book = await prisma.book.findMany();
-  const user = await getAuthenticateUser();
-
-  if (!user) {
-    redirect('/api/auth/login');
-  }
+  const book = await prisma.novel.findMany();
 
   return (
-    <main className="">
+    <Layout className="m-2">
       <article>
-        {/* <LogoutLink>logout</LogoutLink> */}
-
         {book.map((item, index) => (
           <div key={index}>
             <h1>{item.title}</h1>
@@ -23,6 +14,6 @@ export default async function Home() {
           </div>
         ))}
       </article>
-    </main>
+    </Layout>
   );
 }

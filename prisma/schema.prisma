@@ -19,7 +19,7 @@ model User {
   name      String
   email     String     @unique
   image     String?
-  bookmark  Book[]
+  bookmark  Novel[]
   comments  Comment[]
   reviews   Review[]
   Reaction  Reaction[]
@@ -27,10 +27,11 @@ model User {
   updatedAt DateTime   @updatedAt
 }
 
-model Book {
+model Novel {
   id           String    @id @default(cuid())
   title        String
   description  String
+  slug         String    @unique
   tags         String[]
   comments     Comment[]
   reviews      Review[]
@@ -38,17 +39,22 @@ model Book {
   bookmarkedBy User[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  @@index(slug)
 }
 
 model Chapter {
   id        String    @id @default(cuid())
   title     String
   content   String
-  book      Book      @relation(fields: [bookId], references: [id])
-  bookId    String
+  slug      String    @unique
+  novel     Novel     @relation(fields: [novelId], references: [id])
+  novelId   String
   comment   Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@index(slug)
 }
 
 model Comment {
@@ -56,8 +62,8 @@ model Comment {
   content   String
   user      User       @relation(fields: [userId], references: [id])
   userId    String
-  book      Book       @relation(fields: [bookId], references: [id])
-  bookId    String
+  novel     Novel      @relation(fields: [novelId], references: [id])
+  novelId   String
   reactions Reaction[]
   chapter   Chapter?   @relation(fields: [chapterId], references: [id])
   chapterId String?
@@ -69,8 +75,8 @@ model Review {
   rating  Int
   user    User   @relation(fields: [userId], references: [id])
   userId  String
-  book    Book   @relation(fields: [bookId], references: [id])
-  bookId  String
+  novel   Novel  @relation(fields: [novelId], references: [id])
+  novelId String
 }
 
 model Reaction {
