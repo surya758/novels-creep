@@ -14,14 +14,17 @@ datasource db {
 }
 
 model User {
-  id       String     @id @default(cuid())
-  name     String?
-  email    String?    @unique
-  image    String?
-  bookmark Book[]
-  comments Comment[]
-  reviews  Review[]
-  Reaction Reaction[]
+  id        String     @id @default(cuid())
+  kindeId   String     @unique
+  name      String
+  email     String     @unique
+  image     String?
+  bookmark  Book[]
+  comments  Comment[]
+  reviews   Review[]
+  Reaction  Reaction[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Book {
@@ -33,15 +36,19 @@ model Book {
   reviews      Review[]
   chapters     Chapter[]
   bookmarkedBy User[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Chapter {
-  id      String    @id @default(cuid())
-  title   String
-  content String
-  book    Book      @relation(fields: [bookId], references: [id])
-  bookId  String
-  comment Comment[]
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  book      Book      @relation(fields: [bookId], references: [id])
+  bookId    String
+  comment   Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Comment {
