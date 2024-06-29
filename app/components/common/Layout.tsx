@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
-import Footer from './Footer';
-import Header from './Header';
+import Footer from './footer';
+import Header from './header';
 import { cn } from '@/lib/utils';
 
 type LayoutProps = PropsWithChildren<{
@@ -10,11 +10,11 @@ type LayoutProps = PropsWithChildren<{
 
 const Layout = ({ children, className }: LayoutProps) => {
   return (
-    <main className={cn('', className)}>
+    <div className={cn('flex flex-col min-h-screen', className)}>
       <Header />
-      {children}
+      <main className="flex-grow">{children}</main>
       <Footer />
-    </main>
+    </div>
   );
 };
 
