@@ -2,27 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { User } from '@prisma/client';
 import { useQuery } from 'react-query';
 import { getUser } from '@/data/user';
+import Divider from './divider';
+import NavItem from '../home/nav-item';
 
-type Props = {};
-
-const HamburgerMenu = (props: Props) => {
-  const { data: user, isLoading, isError } = useQuery<User>('user', getUser);
+const HamburgerMenu = () => {
+  const { data: user, isLoading } = useQuery<User>('getUser', getUser);
 
   return (
     <div className="bg-black/90">
       <nav className="flex flex-col items-center justify-center h-full">
-        <a href="#" className="text-white/50 font-semibold text-lg">
-          Home
-        </a>
-        <a href="#" className="text-white/50 font-semibold text-lg">
-          About
-        </a>
-        <a href="#" className="text-white/50 font-semibold text-lg">
-          Contact
-        </a>
-        <a href="#" className="text-white/50 font-semibold text-lg">
-          Login
-        </a>
+        <NavItem title="Library" href="" />
+        <Divider />
+        <NavItem title="Bookmarks" href="" />
+        <Divider />
+        <NavItem title="Contact" href="" />
+        <Divider />
+        <NavItem title="Login" href="" />
       </nav>
     </div>
   );

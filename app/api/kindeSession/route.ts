@@ -3,48 +3,53 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+  try {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
 
-  if (!user || !user.id) return NextResponse.json({});
+    if (!user || !user.id) return NextResponse.json({});
 
-  let dbUser = await prisma.user.findUnique({
-    where: { kindeId: user.id },
-  });
-
-  if (!dbUser) {
-    dbUser = await prisma.user.create({
-      data: {
-        kindeId: user.id,
-        email: user.email || '',
-        name:
-          user.given_name && user.family_name
-            ? `${user.given_name} ${user.family_name}`
-            : user.given_name || '',
-        image: user.picture || '',
-      },
-    });
-  } else {
-    if (
-      dbUser.email === user.email &&
-      dbUser.name === `${user.given_name} ${user.family_name}` &&
-      dbUser.image === user.picture
-    )
-      return NextResponse.json({ dbUser });
-
-    // Update user info if it has changed
-    dbUser = await prisma.user.update({
+    let dbUser = await prisma.user.findUnique({
       where: { kindeId: user.id },
-      data: {
-        email: user.email || dbUser.email,
-        name:
-          user.given_name && user.family_name
-            ? `${user.given_name} ${user.family_name}`
-            : user.given_name || dbUser.name,
-        image: user.picture || dbUser.image,
-      },
     });
-  }
 
-  return NextResponse.json({ dbUser });
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
+        data: {
+          kindeId: user.id,
+          email: user.email || '',
+          name:
+            user.given_name && user.family_name
+              ? `${user.given_name} ${user.family_name}`
+              : user.given_name || '',
+          image: user.picture || '',
+        },
+      });
+    } else {
+      if (
+        dbUser.email === user.email &&
+        dbUser.name === `${user.given_name} ${user.family_name}` &&
+        dbUser.image === user.picture
+      )
+        return NextResponse.json({ dbUser });
+
+      // Update user info if it has changed
+      dbUser = await prisma.user.update({
+        where: { kindeId: user.id },
+        data: {
+          email: user.email || dbUser.email,
+          name:
+            user.given_name && user.family_name
+              ? `${user.given_name} ${user.family_name}`
+              : user.given_name || dbUser.name,
+          image: user.picture || dbUser.image,
+        },
+      });
+    }
+
+    return NextResponse.json({ dbUser });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error });
+  }
 }
