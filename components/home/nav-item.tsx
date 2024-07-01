@@ -7,7 +7,7 @@ type NavItemProps = PropsWithChildren<{
 
 const NavItem = ({ children, title, href }: NavItemProps) => {
   return (
-    <a href={href || '#'} className="text-[#CDCDCD] font-normal text-sm py-3">
+    <a href={href || '#'} className="text-[#CDCDCD] font-normal text-base p-3 w-full">
       {title}
     </a>
   );

@@ -7,7 +7,7 @@ export async function GET() {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
-    if (!user || !user.id) return NextResponse.json({});
+    if (!user || !user.id) return NextResponse.json({ user: null, error: 'User not found' });
 
     let dbUser = await prisma.user.findUnique({
       where: { kindeId: user.id },
@@ -31,7 +31,7 @@ export async function GET() {
         dbUser.name === `${user.given_name} ${user.family_name}` &&
         dbUser.image === user.picture
       )
-        return NextResponse.json({ dbUser });
+        return NextResponse.json({ user: dbUser, error: null });
 
       // Update user info if it has changed
       dbUser = await prisma.user.update({
@@ -47,9 +47,9 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json({ dbUser });
+    return NextResponse.json({ user: dbUser, error: null });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error });
+    return NextResponse.json({ user: null, error });
   }
 }

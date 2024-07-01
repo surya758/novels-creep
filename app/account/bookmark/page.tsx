@@ -2,8 +2,8 @@ import React from 'react';
 
 type Props = {};
 
-const page = (props: Props) => {
-  return <div>page</div>;
+const Bookmark = (props: Props) => {
+  return <div>Bookmark</div>;
 };
 
-export default page;
+export default Bookmark;
